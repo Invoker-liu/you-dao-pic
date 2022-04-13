@@ -1,0 +1,34 @@
+.ob : T name = expr
+    CLASS  →   $expr$ $var:suggestVariableName()$ = new $expr$();$END$
+.obf : T name = expr
+    CLASS  →   final $expr$ $var:suggestVariableName()$ = new $expr$();$END$
+.em : Empty Obj
+    java.lang.String → cn.hutool.core.text.CharSequenceUtil.isBlank($expr$)$END$
+    java.util.Collection → cn.hutool.core.collection.CollUtil.isEmpty($expr$)$END$
+    java.util.Map → cn.hutool.core.map.MapUtil.isEmpty($expr$)$END$
+.nem : NotEmpty Obj
+    java.lang.String → cn.hutool.core.text.CharSequenceUtil.isNotBlank($expr$)$END$
+    java.util.Collection → cn.hutool.core.collection.CollUtil.isNotEmpty($expr$)$END$
+    java.util.Map → cn.hutool.core.map.MapUtil.isNotEmpty($expr$)$END$
+.ff : find element
+    ARRAY                    →  java.util.Arrays.stream($expr$).findFirst()
+    java.util.Collection     →  $expr$.stream().findFirst()
+    java.lang.Iterable       →  java.util.stream.StreamSupport.stream($expr$.spliterator(), false).findFirst()
+    java.util.stream.Stream  →  $expr$.findFirst()
+.tp : wrap in Optional
+    NON_VOID                 →  Optional.ofNullable($expr$)
+.groupThenMap : stream group then map
+    ARRAY                    →  java.util.Arrays.stream($expr$).collect(Collectors.groupingBy(Object::toString, Collectors.collectingAndThen(Collectors.toList(), lt -> lt.stream().map(Object::toString).sorted().collect(Collectors.toList()))))
+    java.util.Collection     →  $expr$.stream().collect(Collectors.groupingBy(Object::toString, Collectors.collectingAndThen(Collectors.toList(), lt -> lt.stream().map(Object::toString).sorted().collect(Collectors.toList()))))
+    java.lang.Iterable       →  java.util.stream.StreamSupport.stream($expr$.spliterator(), false).collect(Collectors.groupingBy(Object::toString, Collectors.collectingAndThen(Collectors.toList(), lt -> lt.stream().map(Object::toString).sorted().collect(Collectors.toList()))))
+    java.util.stream.Stream  →  $expr$.collect(Collectors.groupingBy(Object::toString, Collectors.collectingAndThen(Collectors.toList(), lt -> lt.stream().map(Object::toString).sorted().collect(Collectors.toList()))))
+.toMap2 : to map and distinct
+    ARRAY                    →  java.util.Arrays.stream($expr$).collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+    java.util.Collection     →  $expr$.stream().collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+    java.lang.Iterable       →  java.util.stream.StreamSupport.stream($expr$.spliterator(), false).collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+    java.util.stream.Stream  →  $expr$.collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+.sumBy : sum by property
+    ARRAY                    →  java.util.Arrays.stream($expr$).collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+    java.util.Collection     →  $expr$.stream().collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+    java.lang.Iterable       →  java.util.stream.StreamSupport.stream($expr$.spliterator(), false).collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
+    java.util.stream.Stream  →  $expr$.collect(Collectors.toMap(Objects::toString, Objects::toString, (o1, o2) -> o1))
